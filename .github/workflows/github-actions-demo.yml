@@ -2,7 +2,6 @@ name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on:
   push:
-  workflow_dispatch:
   release:
     types:
       - published
@@ -29,8 +28,7 @@ jobs:
     needs: Explore-GitHub-Actions
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-    if:
-      ${{ github.event_name == 'pull_request' }}
+    if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
   deploy-to-prod:
     environment:
       name: prod
@@ -39,3 +37,4 @@ jobs:
     needs: Explore-GitHub-Actions
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+    if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
