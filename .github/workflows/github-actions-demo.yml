@@ -3,6 +3,9 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on:
   push:
   workflow_dispatch:
+  release:
+    types:
+      - published
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
