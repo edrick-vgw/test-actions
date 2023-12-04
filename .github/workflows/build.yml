@@ -7,7 +7,7 @@ on:
 jobs:
   build-and-publish:
     env:
-      AWS_REGION: us-west-1
+      AWS_REGION: us-east-1
       ECR_REPOSITORY: app
     runs-on: ubuntu-latest
     steps:
