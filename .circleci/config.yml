@@ -6,29 +6,9 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Build
+          name: Build with Gradle
           command: ./gradlew build
-  deploy:
-    docker:
-      - image: cimg/openjdk:21.0.0
-    steps:
-      - checkout
-      - run:
-          name: Deploy
-          command: echo "Hello world"
 workflows:
-  build:
+  app:
     jobs:
       - build
-      - deploy:
-          name: deploy-to-dev
-          requires:
-            - build
-      - approve-to-prod:
-          type: approval
-          requires:
-            - build
-      - deploy:
-          name: deploy-to-prod
-          requires:
-            - approve-to-prod
