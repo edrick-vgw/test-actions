@@ -24,7 +24,11 @@ workflows:
           name: deploy-to-dev
           requires:
             - build
+      - approve-to-prod:
+          type: approval
+          requires:
+            - build
       - deploy:
           name: deploy-to-prod
           requires:
-            - build
+            - approve-to-prod
