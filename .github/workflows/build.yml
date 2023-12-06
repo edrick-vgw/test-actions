@@ -1,9 +1,9 @@
 name: Build & Publish
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 jobs:
   build-and-publish:
     env:
@@ -40,9 +40,15 @@ jobs:
           docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
           echo "image=$REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+  deploy-to-dev:
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
       - name: Deploy to development environment
         run: echo "Hello world"
-        environment: development
+  deploy-to-prod:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
       - name: Deploy to production environment
         run: echo "Hello world"
-        environment: production
