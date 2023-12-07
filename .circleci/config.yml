@@ -1,4 +1,10 @@
 version: 2.1
+all-filter: &all-filter
+  filters:
+    branches:
+      only: /.*/
+    tags:
+      only: /.*/
 main-and-release-filter: &main-and-release-filter
   filters:
     branches:
@@ -49,7 +55,8 @@ jobs:
 workflows:
   app:
     jobs:
-      - build
+      - build:
+          <<: *all-filter
       - deploy:
           name: deploy-to-dev
           terraform-workspace: dev
