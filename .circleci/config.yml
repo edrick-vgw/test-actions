@@ -54,7 +54,7 @@ workflows:
           terraform-workspace: dev
           context: dev
           requires:
-            - dev
+            - build
           <<: *main-and-release-filter
       - approve-to-prod:
           type: approval
