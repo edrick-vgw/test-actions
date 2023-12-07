@@ -30,7 +30,8 @@ jobs:
           command: docker build .
       - aws-cli/setup:
           region: us-east-1
-      - aws-ecr/ecr_login
+      - aws-ecr/ecr_login:
+          public_registry: true
       - aws-ecr/push_image: { tag: $CIRCLE_SHA1, repo: app }
   deploy:
     docker:
