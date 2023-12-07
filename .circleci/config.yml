@@ -44,7 +44,7 @@ jobs:
     steps:
       - terraform/install:
           terraform_version: 1.6.5
-      - run: echo "Deploying to $TF_WORKSPACE"
+      - run: echo "Deploying to $TF_WORKSPACE at $CONTEXT_ENVIRONMENT"
 workflows:
   app:
     jobs:
@@ -53,6 +53,8 @@ workflows:
           name: deploy-to-dev
           terraform-workspace: dev
           context: dev
+          requires:
+            - dev
           <<: *main-and-release-filter
       - approve-to-prod:
           type: approval
