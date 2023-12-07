@@ -8,7 +8,6 @@ jobs:
       - run:
           name: Build with Gradle
           command: ./gradlew build
-      - setup_remote_docker
       - run:
           name: Build docker image
           command: docker build .
