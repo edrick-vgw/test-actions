@@ -1,4 +1,20 @@
 version: 2.1
+main-and-release-filter: &main-and-release-filter
+  filters:
+    branches:
+      only: main
+    tags:
+      only: /.*/
+release-filter: &release-filter
+  filters:
+    branches:
+      ignore: /.*/
+    tags:
+      only: /.*/
+orbs:
+  aws-cli: circleci/aws-cli@4.1.2
+  aws-ecr: circleci/aws-ecr@9.0.1
+  terraform: circleci/terraform@3.2.1
 jobs:
   build:
     docker:
@@ -12,10 +28,41 @@ jobs:
       - run:
           name: Build docker image
           command: docker build .
+      - aws-cli/setup:
+          region: us-east-1
+      - aws-ecr/ecr_login
+      - aws-ecr/push_image: { tag: $CIRCLE_SHA1, repo: app }
+  deploy:
+    docker:
+      - image: cimg/base:2023.12
+    parameters:
+      terraform-workspace:
+        type: string
+    environment:
+      AWS_REGION: eu-west-1
+      TF_WORKSPACE: << parameters.terraform-workspace >>
+    steps:
+      - terraform/install:
+          terraform_version: 1.6.5
+      - run: echo "Deploying to $TF_WORKSPACE"
 workflows:
   app:
     jobs:
-      - build:
-          filters:
-            tags:
-              only: /.*/
+      - build
+      - deploy:
+          name: deploy-to-dev
+          terraform-workspace: dev
+          context: dev
+          <<: *main-and-release-filter
+      - approve-to-prod:
+          type: approval
+          requires:
+            - build
+          <<: *release-filter
+      - deploy:
+          name: deploy-to-prod
+          terraform-workspace: prod
+          context: prod
+          requires:
+            - approve-to-prod
+          <<: *release-filter
