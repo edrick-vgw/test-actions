@@ -25,15 +25,13 @@ jobs:
           name: Build with Gradle
           command: ./gradlew build
       - setup_remote_docker
-      - run:
-          name: Build docker image
-          command: docker build .
       - aws-cli/setup:
           region: us-east-1
       - aws-ecr/ecr_login:
           public_registry: true
-      - aws-ecr/push_image:
+      - aws-ecr/build_and_push_image:
           public_registry: true
+          dockerfile: Dockerfile
           repo: app
           tag: $CIRCLE_SHA1
   deploy:
