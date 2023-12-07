@@ -32,7 +32,10 @@ jobs:
           region: us-east-1
       - aws-ecr/ecr_login:
           public_registry: true
-      - aws-ecr/push_image: { tag: $CIRCLE_SHA1, repo: app }
+      - aws-ecr/push_image:
+          public_registry: true
+          repo: app
+          tag: $CIRCLE_SHA1
   deploy:
     docker:
       - image: cimg/base:2023.12
