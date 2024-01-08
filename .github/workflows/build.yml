@@ -1,9 +1,11 @@
 name: Build & Publish
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
+  release:
+    types: ["published"]
 jobs:
   build-and-publish:
     env:
@@ -41,6 +43,7 @@ jobs:
           docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
           echo "image=$REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
   deploy-to-dev:
+    if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
     runs-on: ubuntu-latest
     environment: development
     needs: build-and-publish
@@ -48,6 +51,7 @@ jobs:
       - name: Deploy to development environment
         run: echo "Hello world"
   deploy-to-prod:
+    if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
     runs-on: ubuntu-latest
     environment: production
     needs: build-and-publish
