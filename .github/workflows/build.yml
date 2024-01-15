@@ -43,7 +43,7 @@ jobs:
           docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
           echo "image=$REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
   deploy-to-dev:
-    if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
+    # if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
     runs-on: ubuntu-latest
     environment: 
       name: development
@@ -51,7 +51,7 @@ jobs:
     needs: build-and-publish
     steps:
       - name: Deploy to development environment
-        run: echo "Hello world"
+        run: sleep 60
   deploy-to-prod:
     if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
     runs-on: ubuntu-latest
