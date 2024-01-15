@@ -45,7 +45,9 @@ jobs:
   deploy-to-dev:
     if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
     runs-on: ubuntu-latest
-    environment: development
+    environment: 
+      name: development
+      url: https://www.google.com/
     needs: build-and-publish
     steps:
       - name: Deploy to development environment
